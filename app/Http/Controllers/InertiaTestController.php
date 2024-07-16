@@ -22,10 +22,19 @@ class InertiaTestController extends Controller
         ]
         );
     }
+    public function create()
+    {
+        return Inertia::render('Inertia/Create');
+    }
 
     public function store(Request $request)
     {
         //dd($request);
+        $request->validate([
+            'title' => ['required', 'max:20'],
+            'content' => ['required'],
+        ]);
+
         $inertiaTest = new InertiaTest;
         $inertiaTest->title = $request->title;
         $inertiaTest->content = $request->content;
@@ -34,8 +43,4 @@ class InertiaTestController extends Controller
         return to_route('inertia.index');
     }
 
-    public function create()
-    {
-        return Inertia::render('Inertia/Create');
-    }
 }
