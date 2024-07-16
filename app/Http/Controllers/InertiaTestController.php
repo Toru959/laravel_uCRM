@@ -25,12 +25,17 @@ class InertiaTestController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->NewContent);
+        //dd($request);
         $inertiaTest = new InertiaTest;
         $inertiaTest->title = $request->title;
         $inertiaTest->content = $request->content;
         $inertiaTest->save();
 
         return to_route('inertia.index');
+    }
+
+    public function create()
+    {
+        return Inertia::render('Inertia/Create');
     }
 }
