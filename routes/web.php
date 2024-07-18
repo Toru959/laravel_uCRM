@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InertiaTestController;
+use App\Http\Controllers\ItemController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,6 +30,9 @@ Route::delete('/inertia/{id}', [InertiaTestController::class, 'delete'])->name('
 Route::get('/component-test', function (){
     return Inertia::render('ComponentTest');
 });
+
+Route::resource('items', ItemController::class)
+->middleware(['auth', 'verified']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
