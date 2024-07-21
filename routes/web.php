@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InertiaTestController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\CustomerCOntroller;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +33,9 @@ Route::get('/component-test', function (){
 });
 
 Route::resource('items', ItemController::class)
+->middleware(['auth', 'verified']);
+
+Route::resource('customers', CustomerCOntroller::class)
 ->middleware(['auth', 'verified']);
 
 Route::get('/', function () {
