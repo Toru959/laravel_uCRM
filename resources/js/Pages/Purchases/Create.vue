@@ -1,10 +1,13 @@
 <script setup>
 import { getToday } from '@/common'
 import { onMounted, reactive, ref, computed } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
 
 const form = reactive({
-    data: null,
-    customer_id: null
+    date: null,
+    customer_id: null,
+    status: true,
+    items: [],
 })
 
 const props = defineProps({
@@ -12,68 +15,83 @@ const props = defineProps({
     'items': Array
 })
 
-const itemList = ref([]) // リアクティブな配列を準備
+const itemList = ref([])
 
-onMounted(() => { // ページ読み込み後即時に実行
+onMounted(() => {
     form.date = getToday()
-    props.items.forEach(item => { // 配列を１つずつ処理
-        itemList.value.push({ // 配列に1つずつ追加
-            id: item.id, 
-            name: item.name, 
-            price: item.price, 
-            quantity: 0
+    props.items.forEach(item => {
+        itemList.value.push({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: 0 // 初期値を数値に設定
         })
     })
 })
 
-const quantity = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] // option用
+const quantity = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] // 数値の配列に変更
 
 const totalPrice = computed(() => {
     let total = 0
-    itemList.value.forEach( item => {
+    itemList.value.forEach(item => {
         total += item.price * item.quantity
     })
     return total
 })
 
+const storePurchase = () => {
+    form.items = [] // フォーム送信前にリセット
+    itemList.value.forEach(item => {
+        if(item.quantity > 0) {
+            form.items.push({
+                id: item.id,
+                quantity: item.quantity, // 修正
+            })
+        }
+    })
+    console.log(form.items) // デバッグ用にコンソール出力
+    Inertia.post(route('purchases.store'), form)
+}
 </script>
 
+
 <template>
-    日付<br>
-    <input type="date" name="date" v-model="form.date"><br>
-    会員名<br>
-    <select name="customer" v-model="form.customer_id">
-        <option v-for="customer in customers" :value="customer.id" :key="customer.id">
-            {{ customer.id }} : {{ customer.name }}
-        </option>
-    </select>
-    <br>
-    商品・サービス<br>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>商品名</th>
-                <th>金額</th>
-                <th>数量</th>
-                <th>小計</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in itemList">
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.price }}</td>
-                <td>
-                    <select name="quantity" v-model="item.quantity">
-                        <option v-for="q in quantity" :value="q">{{ q }}</option>
-                    </select>
-                </td>
-                <td>
-                    {{ item.price * item.quantity }}
-                </td>
-            </tr>
-        </tbody>
-    </table><br>
-    合計 {{ totalPrice }}円
+    <form @submit.prevent="storePurchase">
+        日付<br>
+        <input type="date" name="date" v-model="form.date"><br>
+        会員名<br>
+        <select name="customer" v-model="form.customer_id">
+            <option v-for="customer in customers" :value="customer.id" :key="customer.id">
+                {{ customer.id }} : {{ customer.name }}
+            </option>
+        </select>
+        <br>
+        商品・サービス<br>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>商品名</th>
+                    <th>金額</th>
+                    <th>数量</th>
+                    <th>小計</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in itemList" :key="item.id">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>
+                        <select name="quantity" v-model.number="item.quantity">
+                            <option v-for="q in quantity" :value="q" :key="q">{{ q }}</option>
+                        </select>
+                    </td>
+                    <td>{{ item.price * item.quantity }}</td>
+                </tr>
+            </tbody>
+        </table><br>
+        合計 {{ totalPrice }}円<br>
+        <button>登録する</button>
+    </form>
 </template>
