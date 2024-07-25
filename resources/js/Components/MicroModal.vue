@@ -1,17 +1,26 @@
 <script setup>
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 
-onMounted(() => {
-    axios.get('/api/user')
-    .then(res => {
-        console.log(res.data)
-    })
-})
 
 const isShow = ref(false)
 const toggleStatus = () => {
     isShow.value = !isShow.value
+}
+
+const search = ref('');
+const customers = reactive({})
+const searchCustomers = async () => {
+    try{
+        await axios.get(`/api/searchCustomers/?search=${search.value}`)
+        .then( res => {
+            console.log(res.data)
+            customers.value = res.data
+        })
+        toggleStatus()
+    } catch (e) {
+        console.log(e.message)
+    }
 }
 </script>
 
@@ -37,5 +46,6 @@ const toggleStatus = () => {
       </div>
     </div>
 </div>
-<button @click="toggleStatus" type="button" data-micromodal-trigger="modal-1" href='javascript:;'>ボタン</button>
+<input name="customer" v-model="search">
+<button @click="searchCustomers" type="button" data-micromodal-trigger="modal-1">ボタン</button>
 </template>
