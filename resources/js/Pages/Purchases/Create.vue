@@ -20,7 +20,6 @@ onMounted(() => {
 })
 
 const props = defineProps({
-    'customers': Array,
     'items': Array
 })
 
@@ -87,15 +86,10 @@ const storePurchase = () => {
                                             <input type="date" id="date" name="date" required  v-model="form.date" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                             </div>
                                         </div>
-                                        <div class="p-2 w-full mx-auto">
+                                        <div class="p-2 w-full" >
                                             <div class="relative">
-                                            <MicroModal />
                                             <label for="customer" class="leading-7 text-sm text-gray-600">会員名</label>
-                                            <select name="customer" required  v-model="form.customer_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <option v-for="customer in customers" :value="customer.id">
-                                                    {{ customer.id }} : {{ customer.name }}
-                                                </option>
-                                            </select>
+                                            <MicroModal />
                                             </div>
                                         </div>
                                         <div class="my-8 w-full mx-auto overflow-auto">
@@ -125,7 +119,7 @@ const storePurchase = () => {
                                             </table>
                                         </div>
                                         <div class="p-2 w-full mx-auto">
-                                            <div class="relative">
+                                            <div class="">
                                             <label for="price" class="leading-7 text-sm text-gray-600">合計金額</label>
                                             <div class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                 {{ totalPrice }} 円
