@@ -61,6 +61,10 @@ const storePurchase = () => {
     Inertia.post(route('purchases.store'), form)
 }
 
+const setCustomerId = id => {
+    form.customer_id = id
+}
+
 </script>
 
 <template>
@@ -89,7 +93,7 @@ const storePurchase = () => {
                                         <div class="p-2 w-full" >
                                             <div class="relative">
                                             <label for="customer" class="leading-7 text-sm text-gray-600">会員名</label>
-                                            <MicroModal />
+                                            <MicroModal @update:customerId="setCustomerId" />
                                             </div>
                                         </div>
                                         <div class="my-8 w-full mx-auto overflow-auto">
