@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Item;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use App\Models\Order;
 
 class PurchaseController extends Controller
 {
@@ -19,7 +20,7 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        //
+        dd(Order::paginate(50));
     }
 
     /**
