@@ -102,7 +102,7 @@ class PurchaseController extends Controller
         ->selectRaw('id, customer_name, sum(subtotal) as total, status, created_at')
         ->get();
 
-        //dd($items, $order);
+        //dd($order);
 
         return Inertia::render('Purchases/Show', [
             'items' => $items, 'order' => $order
