@@ -28,6 +28,7 @@ const storeItem = () => {
 }
 
 const form = reactive({
+    id: props.order[0].id,
     date: dayjs(props.order[0].created_at).format("YYYY/MM/DD"),
     customer_id: props.order[0].customer_id,
     status: props.order[0].status,
@@ -46,7 +47,7 @@ const totalPrice = computed(() => {
     return total
 })
 
-const storePurchase = () => {
+const updatePurchase = id => {
     form.items = [] // フォーム送信前にリセット
     itemList.value.forEach(item => {
         if(item.quantity > 0) {
@@ -57,7 +58,7 @@ const storePurchase = () => {
         }
     })
     console.log(form.items) // デバッグ用にコンソール出力
-    Inertia.post(route('purchases.store'), form)
+    Inertia.put(route('purchases.update', { purchase: id}), form)
 }
 
 </script>
@@ -75,7 +76,7 @@ const storePurchase = () => {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <section class="text-gray-600 body-font relative">
-                            <form @submit.prevent="storePurchase">
+                            <form @submit.prevent="updatePurchase(form.id)">
                                 <div class="container px-5 mx-auto">
                                     <div class="lg:w-1/2 md:w-2/3 mx-auto">
                                         <div class="-m-2">
@@ -133,7 +134,7 @@ const storePurchase = () => {
                                             </div>
                                         </div>
                                         <div class="p-2 w-full mt-4 flex justify-around">
-                                            <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録する</button>
+                                            <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新する</button>
                                         </div>
                                         </div>
                                     </div>
