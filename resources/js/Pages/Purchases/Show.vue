@@ -104,7 +104,7 @@ const storeItem = () => {
                                             </div>
                                             </div>
                                         </div>
-                                        <div class="p-2 w-full mt-4 flex justify-around">
+                                        <div v-if="props.order[0].status == true" class="p-2 w-full mt-4 flex justify-around">
                                             <Link as="button" :href="route('purchases.edit', { purchase: props.order[0].id })" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
                                                 編集する
                                             </Link>
