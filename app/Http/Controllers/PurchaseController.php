@@ -92,6 +92,8 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
+        //dd($purchase->id);
+
         //小計
         $items = Order::where('id', $purchase->id)
         ->get();
@@ -120,7 +122,26 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        //
+        $purchase = Purchase::find($purchase->id); // vue側から渡ってきたIdで購買 Idを指定
+        $allItems = Item::select('id', 'name', 'price')->get(); //全商品を取得
+        $items = []; //からの配列を用意
+
+        //販売中の商品と中間テーブルを比較し、中間テーブルに数量があれば数量を取得、なければ０で設定
+        foreach($allItems as $allItem){
+            $quantity = 0; // 数量初期値0
+            foreach($purchase->items as $item){ // 中間テーブルを１件ずつチェック
+                if($allItem->id === $item->id){ // 同じIdがあれば
+                    $quantity = $item->pivot->quantity; // 中間テーブルの数量を設定
+                } 
+            }
+            array_push($items, [
+                'id' => $allItem->id,
+                'name' => $allItem->name,
+                'price' => $allItem->price, 
+                'quantity' => $quantity
+            ]);
+        }
+        dd($items);
     }
 
     /**
