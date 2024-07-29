@@ -1,7 +1,7 @@
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import ValidationErrors from '@/Components/ValidationErrors.vue';
 import { onMounted, reactive, ref, computed } from 'vue'
 import dayjs from 'dayjs'
@@ -105,7 +105,9 @@ const storeItem = () => {
                                             </div>
                                         </div>
                                         <div class="p-2 w-full mt-4 flex justify-around">
-                                            <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録する</button>
+                                            <Link as="button" :href="route('purchases.edit', { purchase: props.order[0].id })" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+                                                編集する
+                                            </Link>
                                         </div>
                                         </div>
                                     </div>
