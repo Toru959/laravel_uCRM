@@ -84,9 +84,9 @@ class AnalysisController extends Controller
         DB::statement("set @total = ${total} ;");
         $data = DB::table($subQuery)
         ->selectRaw('decile, average, totalPerGroup, 
-        round(100*totalPerGroup / @total, 1) as total_radio')->get();
+        round(100*totalPerGroup / @total, 1) as total_radio');
 
-        dd($data);
+        //dd($data);
 
         return Inertia::render('Analysis');
     }
