@@ -34,7 +34,7 @@ class AnalysisController extends Controller
         @row_num:= @row_num+1 as row_num,
         customer_id,
         customer_name,
-        total')->get();
+        total');
 
         // 4. 全体の件数を数え、1/10の値や合計金額を取得
         $count = DB::table($subQuery)->count();
@@ -50,6 +50,7 @@ class AnalysisController extends Controller
         array_push($bindValues, 1 + $tempValue);
         }
 
+        //dd($count, $total, $decile, $bindValues, $tempValue);
         // 5 10分割しグループ毎に数字を振る
         DB::statement('set @row_num = 0;');
         $subQuery = DB::table($subQuery)
@@ -72,7 +73,20 @@ class AnalysisController extends Controller
         end as decile
         ", $bindValues); // SelectRaw第二引数にバインドしたい数値(配列)をいれる 
    
-        dd($subQuery);
+        // round, avgはmysqlの関数
+        // 6.グループ毎の合計・平均
+        $subQuery = DB::table($subQuery)
+        ->groupBy('decile')
+        ->selectRaw('decile, round(avg(total)) as average,
+        sum(total) as totalPerGroup');
+
+        // 7.構成比を出すために変数を使用
+        DB::statement("set @total = ${total} ;");
+        $data = DB::table($subQuery)
+        ->selectRaw('decile, average, totalPerGroup, 
+        round(100*totalPerGroup / @total, 1) as total_radio')->get();
+
+        dd($data);
 
         return Inertia::render('Analysis');
     }
